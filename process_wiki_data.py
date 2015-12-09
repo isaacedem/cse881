@@ -1,5 +1,3 @@
-__author__ = 'idorgbefu'
-
 import pandas as pd
 import numpy as np
 from sklearn.externals import joblib
@@ -121,3 +119,26 @@ def summary_stats(revs):
     stats['Number of Editors'] = revs.user.nunique()
     stats['Number of Anonymous Edits'] = revs.anon.sum()
     stats['Number of Revisions'] = len(revs)
+
+def hist(data, col, nbins=20):
+    _, bins = np.histogram(data[col], density=True, bins=nbins)
+
+    heights_controversial, _ = np.histogram(data[data['class'] == 1][col], bins=nbins)
+    heights_controversial, _ = heights_controversial / np.sum(heights_controversial)
+
+    heights_non, _ = np.histogram(data[data['class'] == 0][col], bins=nbins)
+    heights_non, _ = heights_non / np.sum(heights_non)
+
+    str_cont = np.arange((len(hs)) * 2) * 1.
+    for i in [2 * c for c in range(len(bins) -1)]:
+        str_cont[i] = bins[i // 2]
+        str_cont[i + 1] = heights_controversial[i // 2]
+
+    str_non = np.arange((len(hs)) * 2) * 1.
+    for i in [2 * c for c in range(len(bins) -1)]:
+        str_non[i] = bins[i // 2]
+        str_non[i + 1] = heights_non[i // 2]
+
+    return [heights_controversial, heights_non]
+
+    
